@@ -1,13 +1,41 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import auth from "../Firebase/conflict.firebase";
+import { useState } from "react";
+
 
 const Login = () => {
 
+    const [useError, setUseError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handelOnSubmit = e =>{
         e.preventDefault();
    const email=e.target.email.value;
    const password = e.target. password.value;
    console.log(email,password)
-    }
+
+   
+        //reset error
+        setUseError('')
+        setSuccess('');
+
+    //  creat user
+    createUserWithEmailAndPassword(auth,email,password)
+    .then(result=>{
+     console.log(result.user)
+     setSuccess("User Login successfully")
+    } )
+    .catch(error=>{
+     console.error(error)
+     setUseError('User alrady in Exist')
+    })
+
+}
+
+const handleForgetPassword = e =>{
+    console.log('hello world and me also hello')
+}
+
 
     return (
         <div className="hero min-h-screen bg-base-200">
@@ -31,13 +59,19 @@ const Login = () => {
                 </label>
                 <input type="password" placeholder="password" className="input input-bordered" name="password"/>
                 <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                  <a onClick={handleForgetPassword} href="#" className="label-text-alt link link-hover">Forgot password?</a>
                 </label>
               </div>
               <div className="form-control mt-6">
                 <button className="btn btn-primary">Login</button>
               </div>
               </form>
+              {
+            useError && <p className="text-red-700 text-xl font-semibold">{useError}</p>
+        }
+        {
+            success && <p className="text-green-600 text-xl font-semibold">{success}</p>
+        }
             </div>
           </div>
         </div>
